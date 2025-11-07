@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-BackendClubApplication<backendClub>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.apirest.backendClub.BackendClubApplication",
+            "projectName": "backendClub",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
