@@ -14,6 +14,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Participante {
     private ObjectId usuarioId;
-    private List<Progreso> listaProgresos = new ArrayList<>();
+    private List<Progreso> progreso = new ArrayList<>();
 
 }
