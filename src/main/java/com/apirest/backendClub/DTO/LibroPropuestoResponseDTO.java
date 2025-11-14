@@ -15,7 +15,8 @@ public class LibroPropuestoResponseDTO {
     private LibroPropuestoDTO libroPropuesto; 
     private PropuestoPorDTO propuestoPor;
     private LocalDateTime fecha;
-    public String estado;
-    private List<VotarDTO> votacion;
+    private String estado;
+    private List<VotacionDTO> votacion;
+    private EstadisticasVotacionDTO estadisticas;
 
 }

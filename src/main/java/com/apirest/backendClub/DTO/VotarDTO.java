@@ -1,16 +1,18 @@
 package com.apirest.backendClub.DTO;
 
-import java.time.LocalDateTime;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+/**
+ * DTO para registrar un voto en una propuesta.
+ * Este DTO se usa en el REQUEST (entrada) cuando un usuario vota.
+ * Solo contiene usuarioId y el tipo de voto.
+ */
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class VotarDTO {
     private String usuarioId;
-    private String nombreCompleto;
-    private LocalDateTime fechaVotacion;
-    public String voto;
+    private String voto;
 }
