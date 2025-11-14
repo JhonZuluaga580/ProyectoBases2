@@ -1,18 +1,16 @@
-package com.apirest.backendClub.Model.LibrosPropuestosembb;
+package com.apirest.backendClub.DTO;
 
 import java.time.LocalDateTime;
 
-import org.bson.types.ObjectId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Votacion {
-    private ObjectId usuarioId;
+public class VotacionDTO {
+    private String usuarioId;
     private String nombreCompleto;
     private LocalDateTime fechaVotacion;
     public String voto;
-    
 }

@@ -11,7 +11,7 @@ import com.apirest.backendClub.DTO.EstadisticasVotacionDTO;
 import com.apirest.backendClub.DTO.LibroPropuestoDTO;
 import com.apirest.backendClub.DTO.LibroPropuestoResponseDTO;
 import com.apirest.backendClub.DTO.PropuestoPorDTO;
-import com.apirest.backendClub.DTO.VotarDTO;
+import com.apirest.backendClub.DTO.VotacionDTO;
 import com.apirest.backendClub.Model.LibrosPropuestosModel;
 import com.apirest.backendClub.Model.LibrosPropuestosembb.LibroPropuesto;
 import com.apirest.backendClub.Model.LibrosPropuestosembb.PropuestoPor;
@@ -41,7 +41,7 @@ public class LibroPropuestoMapper {
         
         // Convertir lista de votaciones
         if (model.getVotacion() != null) {
-            List<VotarDTO> votaciones = model.getVotacion().stream()
+            List<VotacionDTO> votaciones = model.getVotacion().stream()
                 .map(this::toVotacionDTO)
                 .collect(Collectors.toList());
             dto.setVotacion(votaciones);
@@ -98,9 +98,9 @@ public class LibroPropuestoMapper {
     /**
      * Convierte Votacion (Model) a VotacionDTO
      */
-    private VotarDTO toVotacionDTO(Votacion model) {
+    private VotacionDTO toVotacionDTO(Votacion model) {
         if (model == null) return null;
-        VotarDTO dto = new VotarDTO();
+        VotacionDTO dto = new VotacionDTO();
         dto.setUsuarioId(model.getUsuarioId().toHexString());
         dto.setNombreCompleto(model.getNombreCompleto());
         dto.setFechaVotacion(model.getFechaVotacion());
