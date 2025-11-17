@@ -43,8 +43,8 @@ public ResponseEntity<List<ComentarioResponseDTO>> listarArbol(@PathVariable Str
       return ResponseEntity.ok(resp);
 }
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable String id) {
-        comentariosService.eliminarComentario(new ObjectId(id));
+    public ResponseEntity<Void> eliminarComentarioPorId(@PathVariable String id) {
+        comentariosService.eliminarComentarioPorId(new ObjectId(id));
         return ResponseEntity.noContent().build();
 }
 

@@ -1,6 +1,6 @@
 package com.apirest.backendClub.Model;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -25,7 +25,7 @@ public class UsuariosModel {
     private String telefono;
     private String correo;
     private String rol;
-    private LocalDateTime fechaRegistro;
+    private Instant fechaRegistro;
     public enum Rol { lector, moderador, administrador }
 
 

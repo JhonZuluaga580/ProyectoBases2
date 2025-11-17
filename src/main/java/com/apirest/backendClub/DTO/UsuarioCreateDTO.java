@@ -1,6 +1,7 @@
 package com.apirest.backendClub.DTO;
 
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
@@ -16,5 +17,5 @@ public class UsuarioCreateDTO {
     private String correo;
     private String telefono;
     private String rol;
-    private LocalDateTime FechaRegistro;
+    private Instant FechaRegistro;
 }

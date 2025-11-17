@@ -1,5 +1,6 @@
 package com.apirest.backendClub.Service;
 
+import java.time.Instant;
 import java.util.List;
 
 import org.bson.types.ObjectId;
@@ -21,6 +22,8 @@ public class UsuariosServiceimp implements IUsuariosService{
     @Override
     public UsuarioResponseDTO guardaUsuario(UsuarioCreateDTO usuario) {
         UsuariosModel usuariosModel = usuarioMapper.toModel(usuario);
+        usuariosModel.setFechaRegistro(Instant.now());
+
         usuariosRepository.save(usuariosModel);
         return usuarioMapper.toResponseDTO(usuariosModel);
     }
@@ -47,7 +50,6 @@ public class UsuariosServiceimp implements IUsuariosService{
             usuariosModel.setTelefono(usuario.getTelefono());
             usuariosModel.setCorreo(usuario.getCorreo());
             usuariosModel.setRol(usuario.getRol());
-            usuariosModel.setFechaRegistro(usuario.getFechaRegistro());
     
     UsuariosModel saved = usuariosRepository.save(usuariosModel);
     return usuarioMapper.toResponseDTO(saved);

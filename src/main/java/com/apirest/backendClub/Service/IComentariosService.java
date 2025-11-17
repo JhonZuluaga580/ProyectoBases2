@@ -9,9 +9,8 @@ import com.apirest.backendClub.DTO.ComentarioResponseDTO;
 
 public interface IComentariosService {
     ComentarioResponseDTO crearComentario(ComentarioCreateDTO comentario);
-    List<ComentarioResponseDTO> listarComentariosPorForo(ObjectId foroId);
     List<ComentarioResponseDTO> listarRespuestas(ObjectId parentId);
     List<ComentarioResponseDTO> listarArbolPorForo(ObjectId foroId);
-    void eliminarComentario(ObjectId id);
+    void eliminarComentarioPorId(ObjectId id);
 }
 

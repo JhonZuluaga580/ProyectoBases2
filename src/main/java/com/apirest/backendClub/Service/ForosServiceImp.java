@@ -7,8 +7,10 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.apirest.backendClub.DTO.ActualizarForoDTO;
 import com.apirest.backendClub.DTO.ForoCreateDTO;
 import com.apirest.backendClub.DTO.ForoResponseDTO;
+import com.apirest.backendClub.DTO.ForoStatsDTO;
 import com.apirest.backendClub.Exception.Exception.RecursoNoEncontradoException;
 import com.apirest.backendClub.Mapper.ForoMapper;
 import com.apirest.backendClub.Model.ForosModel;
@@ -43,8 +45,9 @@ public class ForosServiceImp implements IForosService{
         model.getModerador().setUsuarioId(moderadorId);
         model.getModerador().setNombreCompleto(usuario.getNombreCompleto());
         model.setFechaPublicacion(Instant.now());
-        if (model.getEstado() == null) model.setEstado("Abierto");
-
+        if (model.getEstado() == null || model.getEstado().isBlank()) {
+        model.setEstado("Abierto");
+}
         ForosModel guardado = forosRepository.save(model);
         return foroMapper.toResponseDTO(guardado);
     }
@@ -53,5 +56,30 @@ public class ForosServiceImp implements IForosService{
     public List<ForoResponseDTO> listarForos() {
         return foroMapper.toResponseDTOList(forosRepository.findAll());
     }
+    @Override
+         public ForoResponseDTO actualizarForo(ObjectId idForo, ActualizarForoDTO foro) {
+        ForosModel forosModel = forosRepository.findById(idForo)
+            .orElseThrow(() -> new RecursoNoEncontradoException(
+                "Error! El Libro con el ID " + idForo + " no existe."
+            ));
+    // Actualizar campos de la base de datos con valores del libro
+        forosModel.setTitulo(foro.getTitulo());
+        forosModel.setCategoria(foro.getCategoria());
+        forosModel.setDescripcion(foro.getDescripcion());
+        forosModel.setEstado(foro.getEstado());
     
+    ForosModel saved = forosRepository.save(forosModel);
+        return foroMapper.toResponseDTO(saved);
+    }
+    @Override
+     public void eliminarForoPorId(ObjectId id) {
+        ForosModel foro = forosRepository.findById(id)
+            .orElseThrow(() -> new RecursoNoEncontradoException(
+                "Error! El Usuario con el ID " + id + " no existe."
+            ));
+        forosRepository.delete(foro);
+    }
+     public List<ForoStatsDTO> obtenerForosConEstadisticas() {
+        return forosRepository.listarForosConEstadisticas();
+    }
 }

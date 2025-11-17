@@ -19,6 +19,8 @@ public class ForoMapper {
         foroM.setCategoria(dto.getCategoria());
         foroM.setDescripcion(dto.getDescripcion());
         foroM.setModerador(new ModeradorForos());
+        foroM.setEstado(dto.getEstado());
+
 
         return foroM;
     }

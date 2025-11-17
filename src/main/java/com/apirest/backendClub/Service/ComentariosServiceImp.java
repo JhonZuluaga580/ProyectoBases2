@@ -14,6 +14,7 @@ import com.apirest.backendClub.Exception.Exception.RecursoNoEncontradoException;
 import com.apirest.backendClub.Mapper.ComentarioMapper;
 import com.apirest.backendClub.Model.AutorComentarios;
 import com.apirest.backendClub.Model.ComentariosModel;
+import com.apirest.backendClub.Model.ForosModel;
 import com.apirest.backendClub.Model.UsuariosModel;
 import com.apirest.backendClub.Repository.IComentariosRepository;
 import com.apirest.backendClub.Repository.IForosRepository;
@@ -62,30 +63,19 @@ public class ComentariosServiceImp implements IComentariosService{
                 throw new IllegalArgumentException("El comentario padre pertenece a otro foro.");
             }
         }
+        model.getAutor().setNombreCompleto(autor.getNombreCompleto());
        if (model.getFechaPublicacion() == null) {
             model.setFechaPublicacion(LocalDateTime.now());
         }
         if (model.getEstado() == null || model.getEstado().isBlank()) {
             model.setEstado("activo"); // soporte para soft-delete
         }
-
+        
         // 4) Persistir
         ComentariosModel guardado = comentariosRepository.save(model);
 
         // 5) Responder con DTO
         return comentarioMapper.toResponseDTO(guardado);
-    }
-
-    // =========================
-    // Listar comentarios de primer nivel por foro
-    // =========================
-    @Override
-    public List<ComentarioResponseDTO> listarComentariosPorForo(ObjectId foroId) {
-        List<ComentariosModel> lista = comentariosRepository.findByForoIdAndParentIdIsNull(foroId);
-        return lista.stream()
-                .filter(c -> !"eliminado".equalsIgnoreCase(c.getEstado()))
-                .map(comentarioMapper::toResponseDTO)
-                .collect(Collectors.toList());
     }
 
     // =========================
@@ -134,16 +124,13 @@ public List<ComentarioResponseDTO> listarArbolPorForo(ObjectId foroId) {
 
     return raiz;
 }
-
-
     @Override
-    public void eliminarComentario(ObjectId id) {
-        ComentariosModel existente = comentariosRepository.findById(id)
-            .orElseThrow(() -> new RecursoNoEncontradoException("Comentario no encontrado"));
-
-        // Soft delete: cambiar estado a 'eliminado'
-        existente.setEstado("eliminado");
-        comentariosRepository.save(existente);
+     public void eliminarComentarioPorId(ObjectId id) {
+        ComentariosModel comentario = comentariosRepository.findById(id)
+            .orElseThrow(() -> new RecursoNoEncontradoException(
+                "Error! El Usuario con el ID " + id + " no existe."
+            ));
+        comentariosRepository.delete(comentario);
     }
 }
 

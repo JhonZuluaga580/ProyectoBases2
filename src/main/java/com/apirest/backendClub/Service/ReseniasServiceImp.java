@@ -1,16 +1,23 @@
 package com.apirest.backendClub.Service;
 
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
+import com.apirest.backendClub.DTO.ComentarioOpinionDTO;
 import com.apirest.backendClub.DTO.ReseniaResponseDTO;
+import com.apirest.backendClub.DTO.ReseniaTopDTO;
 import com.apirest.backendClub.DTO.ReseniasCreateDTO;
 import com.apirest.backendClub.DTO.ValoracionResponseDTO;
 import com.apirest.backendClub.DTO.ValorarRequestDTO;
 import com.apirest.backendClub.Exception.Exception.RecursoNoEncontradoException;
 import com.apirest.backendClub.Mapper.ReseniaMapper;
 import com.apirest.backendClub.Model.ReseniasModel;
+import com.apirest.backendClub.Model.UsuarioResenia;
+import com.apirest.backendClub.Model.Reseniasembb.ComentarioResenia;
 import com.apirest.backendClub.Model.Reseniasembb.ValoracionItem;
 import com.apirest.backendClub.Repository.ILibrosRepository;
 import com.apirest.backendClub.Repository.IReseniasRepository;
@@ -68,6 +75,32 @@ public class ReseniasServiceImp implements IReseniasService {
     int total = resenia.getValoracion() != null ? resenia.getValoracion().size() : 0;
     return new ValoracionResponseDTO(resenia.getId().toHexString(), total);
 }
+  public ComentarioOpinionDTO agregarComentario(String reseniaId, ComentarioOpinionDTO dto) {
+    ObjectId rId = new ObjectId(reseniaId);
+    ObjectId uId = new ObjectId(dto.getUsuarioId());
 
+    ReseniasModel r = repo.findById(rId).orElseThrow(() -> new RecursoNoEncontradoException("Reseña no existe"));
+    if (!usuariosRepo.existsById(uId)) throw new RecursoNoEncontradoException("Usuario no existe");
+    if (dto.getContenido() == null || dto.getContenido().isBlank()) throw new RecursoNoEncontradoException("Contenido vacío");
+
+    var nuevo = new ComentarioResenia(uId, dto.getContenido(), dto.getFecha() != null ? dto.getFecha() : LocalDateTime.now());
+    r.getComentario_opinion().add(nuevo);
+    repo.save(r);
+
+    // Si quieres regresar nombre del usuario en la respuesta, haz lookup aquí
+    return new ComentarioOpinionDTO(uId.toHexString(), nuevo.getContenido(), nuevo.getFecha());
+}
+ @Override
+     public void eliminarReseniaPorId(ObjectId id) {
+        ReseniasModel resenia = repo.findById(id)
+            .orElseThrow(() -> new RecursoNoEncontradoException(
+                "Error! El Usuario con el ID " + id + " no existe."
+            ));
+        repo.delete(resenia);
+    }
+ @Override
+ public List<ReseniaTopDTO>obtenerReseniasMasValoradas() {
+        return repo.obtenerReseniasMasValoradas();
+    }
     
 }
