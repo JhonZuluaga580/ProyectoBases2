@@ -13,10 +13,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.apirest.backendClub.DTO.ActualizarProgresoDTO;
 import com.apirest.backendClub.DTO.RetoCreateDTO;
 import com.apirest.backendClub.DTO.RetoResponseDTO;
+import com.apirest.backendClub.DTO.RetoStatsDTO;
 import com.apirest.backendClub.Service.IRetosService;
 
 @RestController
@@ -56,5 +59,32 @@ public class RetoController {
     public ResponseEntity<Void> eliminarReto(@PathVariable String id) {
         retosService.eliminarReto(new ObjectId(id));
         return ResponseEntity.noContent().build();
+    }
+     @PostMapping("/{retoId}/inscribir")
+    public ResponseEntity<RetoResponseDTO> inscribirUsuario(
+            @PathVariable String retoId,
+            @RequestParam String usuarioId) {
+        RetoResponseDTO reto = retosService.inscribirUsuarioEnReto(
+            new ObjectId(retoId), 
+            new ObjectId(usuarioId)
+        );
+        return new ResponseEntity<>(reto, HttpStatus.OK);
+    }
+    @PutMapping("/{retoId}/progreso")
+    public ResponseEntity<RetoResponseDTO> actualizarProgreso(
+            @PathVariable String retoId,
+            @RequestParam String usuarioId,
+            @RequestBody ActualizarProgresoDTO progreso) {
+        RetoResponseDTO reto = retosService.actualizarProgresoUsuario(
+            new ObjectId(retoId),
+            new ObjectId(usuarioId),
+            progreso
+        );
+        return new ResponseEntity<>(reto, HttpStatus.OK);
+    }
+    @GetMapping("/estadisticas")
+    public ResponseEntity<List<RetoStatsDTO>> obtenerEstadisticas() {
+        List<RetoStatsDTO> estadisticas = retosService.obtenerRetosConEstadisticas();
+        return new ResponseEntity<>(estadisticas, HttpStatus.OK);
     }
 }

@@ -16,7 +16,6 @@ import com.apirest.backendClub.DTO.ValorarRequestDTO;
 import com.apirest.backendClub.Exception.Exception.RecursoNoEncontradoException;
 import com.apirest.backendClub.Mapper.ReseniaMapper;
 import com.apirest.backendClub.Model.ReseniasModel;
-import com.apirest.backendClub.Model.UsuarioResenia;
 import com.apirest.backendClub.Model.Reseniasembb.ComentarioResenia;
 import com.apirest.backendClub.Model.Reseniasembb.ValoracionItem;
 import com.apirest.backendClub.Repository.ILibrosRepository;

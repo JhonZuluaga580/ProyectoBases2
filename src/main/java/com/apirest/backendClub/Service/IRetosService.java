@@ -6,6 +6,9 @@ import org.bson.types.ObjectId;
 
 import com.apirest.backendClub.DTO.RetoCreateDTO;
 import com.apirest.backendClub.DTO.RetoResponseDTO;
+import com.apirest.backendClub.DTO.RetoStatsDTO;
+import com.apirest.backendClub.DTO.ActualizarProgresoDTO;
+
 
 public interface IRetosService {
     RetoResponseDTO crearReto(RetoCreateDTO reto);
@@ -13,4 +16,7 @@ public interface IRetosService {
     RetoResponseDTO buscarRetoPorId(ObjectId id);
     RetoResponseDTO actualizarReto(ObjectId id, RetoCreateDTO reto);
     void eliminarReto(ObjectId id);
+    RetoResponseDTO inscribirUsuarioEnReto(ObjectId retoId, ObjectId usuarioId);
+    RetoResponseDTO actualizarProgresoUsuario(ObjectId retoId, ObjectId usuarioId, ActualizarProgresoDTO progreso);
+    List<RetoStatsDTO> obtenerRetosConEstadisticas();
 }

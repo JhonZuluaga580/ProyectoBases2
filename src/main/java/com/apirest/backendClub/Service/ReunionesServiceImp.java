@@ -29,14 +29,12 @@ public class ReunionesServiceImp implements IReunionesService {
 
     @Override
     public ReunionResponseDTO crearReunion(ReunionCreateDTO reunion) {
-        // Validaciones básicas
         if (reunion.getDateTime() == null) {
             throw new IllegalArgumentException("Fecha y hora requeridas");
         }
         
         ReunionesModel model = reunionMapper.toModel(reunion);
         
-        // Procesar invitados: validar y agregar nombres
         List<InvitadoReunion> invitados = new ArrayList<>();
         if (reunion.getListaInvitadosIds() != null) {
             for (String idStr : reunion.getListaInvitadosIds()) {
@@ -49,7 +47,7 @@ public class ReunionesServiceImp implements IReunionesService {
         }
         model.setListaInvitados(invitados);
         
-        // Validar libros existen (opcional, pero buena práctica)
+        // Validar libros existen
         if (model.getLibroDiscutir() != null) {
             for (var libro : model.getLibroDiscutir()) {
                 if (!librosRepository.existsById(libro.getLibroId())) {
@@ -79,7 +77,6 @@ public class ReunionesServiceImp implements IReunionesService {
         ReunionesModel existente = reunionesRepository.findById(id)
             .orElseThrow(() -> new RecursoNoEncontradoException("Reunión no encontrada: " + id));
         
-        // Actualizar campos básicos
         if (reunion.getDateTime() != null) {
             existente.setDateTime(reunion.getDateTime());
         }
@@ -99,5 +96,9 @@ public class ReunionesServiceImp implements IReunionesService {
             throw new RecursoNoEncontradoException("Reunión no encontrada: " + id);
         }
         reunionesRepository.deleteById(id);
+    }
+    @Override
+    public List<ReunionStatsDTO> obtenerReunionesMasConcurridas() {
+        return reunionesRepository.obtenerReunionesMasConcurridas();
     }
 }

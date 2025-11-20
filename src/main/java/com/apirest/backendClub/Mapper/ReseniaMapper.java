@@ -58,9 +58,7 @@ public ReseniaResponseDTO toResponseDTO(ReseniasModel model){
             return null;
         }
         ReseniaResponseDTO dto = new ReseniaResponseDTO();
-        
-        if (model.getId() != null) dto.setId(model.getId().toHexString());
-        
+                
         if (model.getLibro() != null) {
             dto.setLibro(new LibroReseniaDTO(
                 model.getLibro().getLibroId() != null ? model.getLibro().getLibroId().toHexString() : null,

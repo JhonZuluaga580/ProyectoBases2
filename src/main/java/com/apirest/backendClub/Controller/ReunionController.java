@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.apirest.backendClub.DTO.ReunionCreateDTO;
 import com.apirest.backendClub.DTO.ReunionResponseDTO;
+import com.apirest.backendClub.DTO.ReunionStatsDTO;
 import com.apirest.backendClub.Service.IReunionesService;
 
 
@@ -27,14 +28,12 @@ public class ReunionController {
     @Autowired
     private IReunionesService reunionesService;
     
-    //Crea una nueva reunión.
     @PostMapping("/insertar")
     public ResponseEntity<ReunionResponseDTO> crearReunion(@RequestBody ReunionCreateDTO reunion) {
         ReunionResponseDTO creada = reunionesService.crearReunion(reunion);
         return new ResponseEntity<>(creada, HttpStatus.CREATED);
     }
     
-    //Lista todas las reuniones.
     @GetMapping("/listar")
     public ResponseEntity<List<ReunionResponseDTO>> listarReuniones() {
         List<ReunionResponseDTO> reuniones = reunionesService.listarReuniones();
@@ -42,7 +41,6 @@ public class ReunionController {
     }
     
     
-    //Actualiza una reunión existente.
     @PutMapping("/actualizar/{id}")
     public ResponseEntity<ReunionResponseDTO> actualizarReunion(
             @PathVariable String id, 
@@ -54,11 +52,14 @@ public class ReunionController {
         return new ResponseEntity<>(actualizada, HttpStatus.OK);
     }
     
-    //Elimina una reunión.
     @DeleteMapping("/eliminar/{id}")
     public ResponseEntity<Void> eliminarReunion(@PathVariable String id) {
         reunionesService.eliminarReunion(new ObjectId(id));
         return ResponseEntity.noContent().build();
     }
-
+    @GetMapping("/mas-concurridas")
+    public ResponseEntity<List<ReunionStatsDTO>> obtenerReunionesMasConcurridas() {
+        List<ReunionStatsDTO> reuniones = reunionesService.obtenerReunionesMasConcurridas();
+        return new ResponseEntity<>(reuniones, HttpStatus.OK);
+    }
 }

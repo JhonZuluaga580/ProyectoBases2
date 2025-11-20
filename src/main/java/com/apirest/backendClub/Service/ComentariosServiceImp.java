@@ -14,7 +14,6 @@ import com.apirest.backendClub.Exception.Exception.RecursoNoEncontradoException;
 import com.apirest.backendClub.Mapper.ComentarioMapper;
 import com.apirest.backendClub.Model.AutorComentarios;
 import com.apirest.backendClub.Model.ComentariosModel;
-import com.apirest.backendClub.Model.ForosModel;
 import com.apirest.backendClub.Model.UsuariosModel;
 import com.apirest.backendClub.Repository.IComentariosRepository;
 import com.apirest.backendClub.Repository.IForosRepository;
@@ -35,7 +34,6 @@ public class ComentariosServiceImp implements IComentariosService{
     @Override
     public ComentarioResponseDTO crearComentario(ComentarioCreateDTO dto) {
         ComentariosModel model = comentarioMapper.toModel(dto);
-        // Validaciones básicas
         ObjectId foroId = model.getForoId();
         if (foroId == null || !forosRepository.existsById(foroId)) {
             throw new RecursoNoEncontradoException("Se requiere foroId para crear un comentario");
@@ -68,19 +66,14 @@ public class ComentariosServiceImp implements IComentariosService{
             model.setFechaPublicacion(LocalDateTime.now());
         }
         if (model.getEstado() == null || model.getEstado().isBlank()) {
-            model.setEstado("activo"); // soporte para soft-delete
+            model.setEstado("activo"); 
         }
         
-        // 4) Persistir
         ComentariosModel guardado = comentariosRepository.save(model);
 
-        // 5) Responder con DTO
         return comentarioMapper.toResponseDTO(guardado);
     }
 
-    // =========================
-    // Listar respuestas (hijos) de un comentario
-    // =========================
     @Override
     public List<ComentarioResponseDTO> listarRespuestas(ObjectId parentId) {
         List<ComentariosModel> lista = comentariosRepository.findByParentId(parentId);
@@ -91,32 +84,27 @@ public class ComentariosServiceImp implements IComentariosService{
     }
 @Override
 public List<ComentarioResponseDTO> listarArbolPorForo(ObjectId foroId) {
-    // 1) Traer TODOS los comentarios del foro
     List<ComentariosModel> todos = comentariosRepository.findByForoId(foroId);
 
-    // 2) Filtrar soft-deleted y mapear a DTO
     List<ComentarioResponseDTO> dtos = todos.stream()
             .filter(c -> !"eliminado".equalsIgnoreCase(c.getEstado()))
-            .sorted((a, b) -> a.getFechaPublicacion().compareTo(b.getFechaPublicacion())) // opcional: orden cronológico
+            .sorted((a, b) -> a.getFechaPublicacion().compareTo(b.getFechaPublicacion())) 
             .map(comentarioMapper::toResponseDTO)
             .collect(Collectors.toList());
 
-    // 3) Indexar por id para armar árbol rápido
-    //    Ojo: en DTO los ids son String (hex), perfecto para usar de clave
+
     var porId = dtos.stream().collect(Collectors.toMap(ComentarioResponseDTO::getId, x -> x));
 
-    // 4) Conectar hijos a sus padres
     List<ComentarioResponseDTO> raiz = new java.util.ArrayList<>();
     for (ComentarioResponseDTO c : dtos) {
         String parentId = c.getParentId();
         if (parentId == null) {
-            raiz.add(c); // comentario de primer nivel
+            raiz.add(c); 
         } else {
             ComentarioResponseDTO padre = porId.get(parentId);
             if (padre != null) {
                 padre.getRespuestas().add(c);
             } else {
-                // Si el padre no existe (dato raro), lo tratamos como raíz para no perderlo
                 raiz.add(c);
             }
         }

@@ -11,7 +11,6 @@ import com.apirest.backendClub.Model.LibrosPropuestosembb.*;
 @Component
 public class LibroPropuestoMapper {
     
-    // Model a ResponseDTO
     public LibroPropuestoResponseDTO toResponseDTO(LibrosPropuestosModel model) {
         LibroPropuestoResponseDTO dto = new LibroPropuestoResponseDTO();
         dto.setId(model.getIdAsString());

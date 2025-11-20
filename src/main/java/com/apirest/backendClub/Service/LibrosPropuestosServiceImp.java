@@ -32,20 +32,17 @@ public class LibrosPropuestosServiceImp implements ILibrosPropuestosService {
         ObjectId libroId = new ObjectId(propuesta.getLibroId());
         ObjectId usuarioId = new ObjectId(propuesta.getUsuarioId());
         
-        // Verificar existencia
         LibrosModel libro = librosRepository.findById(libroId)
             .orElseThrow(() -> new RecursoNoEncontradoException("Libro no existe"));
         
         UsuariosModel usuario = usuariosRepository.findById(usuarioId)
             .orElseThrow(() -> new RecursoNoEncontradoException("Usuario no existe"));
         
-        // Evitar duplicados
         List<String> estadosActivos = Arrays.asList("pendiente", "en_votacion");
         if (propuestasRepository.existsByLibroPropuestoLibroIdAndEstadoIn(libroId, estadosActivos)) {
             throw new IllegalStateException("Ya existe propuesta activa para este libro");
         }
         
-        // Crear propuesta
         LibrosPropuestosModel model = new LibrosPropuestosModel();
         model.setLibroPropuesto(mapper.createLibroPropuesto(libroId, libro.getTitulo(), libro.getGenero()));
         model.setPropuestoPor(mapper.createPropuestoPor(usuarioId, usuario.getNombreCompleto()));
@@ -100,11 +97,9 @@ public class LibrosPropuestosServiceImp implements ILibrosPropuestosService {
             throw new IllegalArgumentException("Voto inválido");
         }
         
-        // Verificar usuario existe
         UsuariosModel usuario = usuariosRepository.findById(usuarioId)
             .orElseThrow(() -> new RecursoNoEncontradoException("Usuario no existe"));
         
-        // Buscar propuesta
         LibrosPropuestosModel propuesta = propuestasRepository.findById(propuestaId)
             .orElseThrow(() -> new RecursoNoEncontradoException("Propuesta no encontrada"));
         

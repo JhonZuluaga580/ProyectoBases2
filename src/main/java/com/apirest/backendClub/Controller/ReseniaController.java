@@ -21,7 +21,6 @@ import com.apirest.backendClub.DTO.ValoracionResponseDTO;
 import com.apirest.backendClub.DTO.ValorarRequestDTO;
 import com.apirest.backendClub.Service.IReseniasService;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
